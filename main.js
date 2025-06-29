@@ -22,4 +22,52 @@ function mimicServerCall(url="http://mimicServer.example.com", config={}) {
       }
     }, 300);
   });
+}// Provided mock server function
+function mimicServerCall(url="http://mimicServer.example.com", config={}) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      // Randomly reject or resolve
+      let isRandomFailure = Math.random() < 0.2;
+      if (isRandomFailure) {
+        reject("Random server error. Try again.");
+      } else {
+        resolve("Pretend remote server notified of action!");
+      }
+    }, 300);
+  });
 }
+
+// Constants for heart glyphs
+const EMPTY_HEART = '♡';
+const FULL_HEART = '♥';
+
+// Wait for the page to fully load
+document.addEventListener("DOMContentLoaded", () => {
+  const hearts = document.querySelectorAll(".like-glyph");
+  const modal = document.getElementById("modal");
+  const modalMessage = document.getElementById("modal-message");
+
+  hearts.forEach(heart => {
+    heart.addEventListener("click", () => {
+      mimicServerCall()
+        .then(() => {
+          if (heart.innerText === EMPTY_HEART) {
+            heart.innerText = FULL_HEART;
+            heart.classList.add("activated-heart");
+          } else {
+            heart.innerText = EMPTY_HEART;
+            heart.classList.remove("activated-heart");
+          }
+        })
+        .catch((error) => {
+          modal.classList.remove("hidden");
+          modalMessage.textContent = error;
+          setTimeout(() => {
+            modal.classList.add("hidden");
+          }, 3000);
+        });
+    });
+  });
+});
+
+

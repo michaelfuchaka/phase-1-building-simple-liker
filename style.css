@@ -63,4 +63,10 @@ article.media-post > footer ul {
 
 .hidden {
   visibility: hidden;
+}.hidden {
+  display: none;
+}
+
+.activated-heart {
+  color: red;
 }
